@@ -33,6 +33,7 @@ on boot
 # permission for Input Device(TSP).
     chmod 0660 /sys/class/input/input1/enabled
     chown system system /sys/class/input/input1/enabled
+
 # efs
   #  mkdir /efs/drm 0700 system system
     mkdir /efs/imei 0775 radio radio
@@ -222,29 +223,7 @@ on boot
 # Fingerprint
     mkdir /dev/validity 0770 system system
 
-# SEC_PRODUCT_FEATURE_COMMON_USE_MULTISIM
-    setprop ro.multisim.simslotcount 2
-
 # TODO: replace it with device's DEXPREOPT_BOOT_JARS
-
-# RIL
-service at_distributor /system/bin/at_distributor
-    class late_start
-    user root
-    group radio log
-
-service diag_uart_log /system/bin/diag_uart_log
-    class main
-    user root
-    group radio
-
-service ril-daemon1 /system/bin/rild -s rild1 -ds rild-debug1 -l /system/lib/libsec-ril-dsds.so
-    class main
-    socket rild1 stream 660 root radio
-    socket rild-debug1 stream 660 radio system
-    user root
-    group radio cache inet misc audio log qcom_diag sdcard_r shell sdcard_rw system drmrpc
-    disabled
 
 #Private Mode
 service privatemode /system/bin/sdcard /data/privatemode /mnt/shell/privatemode 1000 1000
@@ -297,7 +276,7 @@ on fs
      chmod 0750 /persdata/absolute
 
 # SSWAP
-service swapon /sbin/sswap -s
+service swapon /sbin/sswap -s  -f 1024
     class core
     user root
     group root
